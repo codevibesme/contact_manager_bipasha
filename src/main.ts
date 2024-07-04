@@ -11,9 +11,9 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
 
-  if (process.env.APP_ENV !== 'STAGING' && process.env.APP_ENV !== 'PRODUCTION') {
+  // if (process.env.APP_ENV !== 'STAGING' && process.env.APP_ENV !== 'PRODUCTION') {
     setupSwagger(app);
-  }
+  // }
 
   await app.listen(parseInt(process.env.PORT as string), () => {
     console.log(`Server started on ${process.env.SERVER_URL} and Port: ${process.env.PORT}`)

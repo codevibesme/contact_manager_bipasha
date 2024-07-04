@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: contact-manager
+    restart: always
+    ports:
+      - 80:80
+    expose:
+      - 80
+    depends_on:
+      - db
+    networks:
+      - cn
+  db:
+    image: postgres:latest
+    container_name: contact-manager-db
+    restart: always
+    environment:
+      POSTGRES_USER: bipasha
+      POSTGRES_PASSWORD: bipasha
+      POSTGRES_DB: contact-manager-db
+    ports:
+      - 5430:5432
+    expose:
+      - 5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - cn
+
+volumes:
+  db-data:
+
+networks:
+  cn:
+    driver: bridge
