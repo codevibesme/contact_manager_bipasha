@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 
 import ContactsEntity from "../contacts/contacts.entity";
 import UsersEntity from "../users/users.entity";
 
-import { CreateUserDto } from "../users/users.dto";
+import { CreateUserDto, UserDto } from "../users/users.dto";
+import { ContactDto, CreateContactDto } from "../contacts/contacts.dto";
 
 export class PureUserService {
     constructor(@InjectRepository(UsersEntity) private usersRepository: Repository<UsersEntity>) { }
@@ -14,8 +15,13 @@ export class PureUserService {
         return await this.usersRepository.findOne({ where: { id } });
     }
 
-    async createUser(record: CreateUserDto) {
+    async createUser(record: CreateUserDto, txnManager?: EntityManager): Promise<UserDto> {
         const newUser = this.usersRepository.create(record);
+
+        if (txnManager) {
+            return await txnManager.save(newUser);
+        }
+
         return await this.usersRepository.save(newUser);
     }
 
@@ -31,8 +37,14 @@ export class PureContactService {
         return await this.contactsRepository.findOne({ where: { id } });
     }
 
-    async createContact(contact: ContactsEntity) {
-        return await this.contactsRepository.save(contact);
+    async createContact(contact: Object, txnManager?: EntityManager): Promise<ContactDto> {
+        const newContact = this.contactsRepository.create(contact);
+
+        if (txnManager) {
+            return await txnManager.save(newContact);
+        }
+
+        return await this.contactsRepository.save(newContact);
     }
 
     async getContactsByUserId(userId: number) {
@@ -52,8 +64,8 @@ export class RepoHelperService {
         return await this.pureUserService.getUserById(id);
     }
 
-    async createUser(record: CreateUserDto) {
-        return await this.pureUserService.createUser(record);
+    async createUser(record: CreateUserDto, txnManager?: EntityManager) {
+        return await this.pureUserService.createUser(record, txnManager);
     }
 
     async getUserByEmail(email: string) {
@@ -65,8 +77,8 @@ export class RepoHelperService {
         return await this.pureContactService.getContactById(id);
     }
 
-    async createContact(contact: ContactsEntity) {
-        return await this.pureContactService.createContact(contact);
+    async createContact(contact: Object, txnManager?: EntityManager) {
+        return await this.pureContactService.createContact(contact, txnManager);
     }
 
     async getContactsByUserId(userId: number) {

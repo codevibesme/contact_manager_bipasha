@@ -20,12 +20,12 @@ export class MailHelpersService {
         });
     }
 
-    async sendVerificationEmail(userEmail: string, url: string) {
+    async sendVerificationEmail(userEmail: string, url: string, password?: string) {
         const mailOptions: MailOptions = {
             from: process.env.MAIL_USER,
             to: userEmail,
             subject: "Verification Code - Contact Manager App",
-            text: `Click on this link to verify your account: ${url}`,
+            text: `${password ? 'Log in with this password: ' + password : ''}\n\nClick on this link to verify your account: ${url}`,
         }
 
         try {

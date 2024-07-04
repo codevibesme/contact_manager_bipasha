@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 
 import UsersEntity from "../users/users.entity";
@@ -23,7 +23,7 @@ export default class ContactsEntity {
     @Column({ name: 'user_id', type: 'int', nullable: false })
     user_id: number;
 
-    @ManyToMany(() => UsersEntity, user => user.contacts)
+    @ManyToOne(() => UsersEntity, user => user.contacts)
     @JoinColumn({ name: 'user_id', foreignKeyConstraintName: 'fk_contacts_user' })
     user: UsersEntity;
 };

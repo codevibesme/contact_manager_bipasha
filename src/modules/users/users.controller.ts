@@ -18,7 +18,6 @@ export class UsersController {
     ) { }
 
     @Post('sign-up')
-    @ApiBearerAuth('JWT-auth')
     @ApiOperation({ summary: 'Sign up an user.' })
     @ApiOkResponse({ description: 'User Signed Up successfully.' })
     @ApiConflictResponse({ description: 'User already exists.' })
@@ -57,7 +56,6 @@ export class UsersController {
     }
 
     @Get('sign-in')
-    @ApiBearerAuth('JWT-auth')
     @ApiOperation({ summary: 'Sign in an user.' })
     @ApiQuery({ name: 'email', example: 'johndoe@gmail.com', required: true })
     @ApiQuery({ name: 'password', example: 'pass1234', required: true })
@@ -78,4 +76,4 @@ export class UsersController {
             throw error;
         }
     }
-};  
+};
